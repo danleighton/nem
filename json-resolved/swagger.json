@@ -1,0 +1,5681 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Catapult REST Endpoints",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "0.7.21"
+  },
+  "externalDocs" : {
+    "description" : "NEM Developer Center",
+    "url" : "https://nemtech.github.io/"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/agilisai/catapult-rest_endpoints/0.7.21",
+    "description" : "SwaggerHub API Auto Mocking"
+  }, {
+    "url" : "http://localhost:3000"
+  } ],
+  "tags" : [ {
+    "name" : "Account routes"
+  }, {
+    "name" : "Block routes"
+  }, {
+    "name" : "Chain routes"
+  }, {
+    "name" : "Diagnostic routes"
+  }, {
+    "name" : "Metadata routes"
+  }, {
+    "name" : "Mosaic routes"
+  }, {
+    "name" : "Multisig routes"
+  }, {
+    "name" : "Namespace routes"
+  }, {
+    "name" : "Network routes"
+  }, {
+    "name" : "Node routes"
+  }, {
+    "name" : "Restriction Mosaic routes"
+  }, {
+    "name" : "Restriction Account routes"
+  }, {
+    "name" : "Receipt routes"
+  }, {
+    "name" : "Transaction routes"
+  } ],
+  "paths" : {
+    "/account/{accountId}" : {
+      "get" : {
+        "tags" : [ "Account routes" ],
+        "summary" : "Get account information",
+        "description" : "Returns the account information.",
+        "operationId" : "getAccountInfo",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account" : {
+      "post" : {
+        "tags" : [ "Account routes" ],
+        "summary" : "Get accounts information",
+        "description" : "Returns the account information for an array of accounts.",
+        "operationId" : "getAccountsInfo",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/accountIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of accounts information.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/AccountInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/transactions" : {
+      "get" : {
+        "tags" : [ "Account routes" ],
+        "summary" : "Get confirmed transactions",
+        "description" : "Gets an array of transactions for which an account is the sender or receiver.",
+        "operationId" : "getAccountTransactions",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Transaction identifier up to which transactions are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of confirmed transactions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/transactions/incoming" : {
+      "get" : {
+        "tags" : [ "Account routes" ],
+        "summary" : "Get incoming transactions",
+        "description" : "Gets an array of incoming transactions. A transaction is said to be incoming with respect to an account\nif the account is the recipient of the transaction.\n",
+        "operationId" : "getAccountIncomingTransactions",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Transaction identifier up to which transactions are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of incoming transactions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/transactions/outgoing" : {
+      "get" : {
+        "tags" : [ "Account routes" ],
+        "summary" : "Get outgoing transactions",
+        "description" : "Gets an array of outgoing transactions. A transaction is said to be outgoing with respect to an account\nif the account is the sender of the transaction.\n",
+        "operationId" : "getAccountOutgoingTransactions",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Transaction identifier up to which transactions are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of outgoing transactions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/transactions/unconfirmed" : {
+      "get" : {
+        "tags" : [ "Account routes" ],
+        "summary" : "Get unconfirmed transactions",
+        "description" : "Gets the array of transactions not included in a block where an account is the sender or receiver.",
+        "operationId" : "getAccountUnconfirmedTransactions",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Transaction identifier up to which transactions are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of unconfirmed transactions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/transactions/partial" : {
+      "get" : {
+        "tags" : [ "Account routes" ],
+        "summary" : "Get aggregate bonded transactions information",
+        "description" : "Gets an array of aggregate bonded transactions where the account is the sender or requires to cosign the transaction.\n",
+        "operationId" : "getAccountPartialTransactions",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Transaction identifier up to which transactions are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of aggregate bonded transactions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/block/{height}" : {
+      "get" : {
+        "tags" : [ "Block routes" ],
+        "summary" : "Get block information",
+        "description" : "Gets a block from the chain that has the given height.",
+        "operationId" : "getBlockByHeight",
+        "parameters" : [ {
+          "name" : "height",
+          "in" : "path",
+          "description" : "Block height.\nIf height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BlockInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blocks/{height}/limit/{limit}" : {
+      "get" : {
+        "tags" : [ "Block routes" ],
+        "summary" : "Get blocks information",
+        "description" : "Gets up to limit number of blocks after given block height.",
+        "operationId" : "getBlocksByHeightWithLimit",
+        "parameters" : [ {
+          "name" : "height",
+          "in" : "path",
+          "description" : "Block height.\nIf height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "path",
+          "description" : "Number of elements to be returned.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "enum" : [ 25, 50, 75, 100 ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of blocks information.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/BlockInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/block/{height}/transactions" : {
+      "get" : {
+        "tags" : [ "Block routes" ],
+        "summary" : "Get transactions from a block",
+        "description" : "Returns an array of transactions included in a block for a given block height.",
+        "operationId" : "getBlockTransactions",
+        "parameters" : [ {
+          "name" : "height",
+          "in" : "path",
+          "description" : "Block height.\nIf height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Transaction identifier up to which transactions are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of transactions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/block/{height}/transaction/{hash}/merkle" : {
+      "get" : {
+        "tags" : [ "Block routes" ],
+        "summary" : "Get the merkle path for a given a transaction and block",
+        "description" : "Returns the merkle path for a transaction included in a block.\nThe path is the complementary data needed to calculate the merkle root.\nA client can compare if the calculated root equals the one recorded in the\nblock header, verifying that the transaction was included in the block.\n",
+        "operationId" : "getMerkleTransaction",
+        "parameters" : [ {
+          "name" : "height",
+          "in" : "path",
+          "description" : "Block height.\nIf height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }, {
+          "name" : "hash",
+          "in" : "path",
+          "description" : "Transaction hash.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Hash256"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MerkleProofInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chain/height" : {
+      "get" : {
+        "tags" : [ "Chain routes" ],
+        "summary" : "Get the current height of the chain",
+        "description" : "Returns the current height of the blockchain.",
+        "operationId" : "getChainHeight",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HeightInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chain/score" : {
+      "get" : {
+        "tags" : [ "Chain routes" ],
+        "summary" : "Get the current score of the chain",
+        "description" : "Gets the current score of the blockchain. The higher the score, the better the chain.\nDuring synchronization, nodes try to get the best blockchain in the network.\n\nThe score for a block is derived from its difficulty and the time (in seconds) that has elapsed since the last block:\n\n    block score = difficulty − time elapsed since last block\n",
+        "operationId" : "getChainScore",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ChainScoreDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diagnostic/storage" : {
+      "get" : {
+        "tags" : [ "Diagnostic routes" ],
+        "summary" : "Get the storage information of the node",
+        "description" : "Returns diagnostic information about the node storage.",
+        "operationId" : "getDiagnosticStorage",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StorageInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diagnostic/server" : {
+      "get" : {
+        "tags" : [ "Diagnostic routes" ],
+        "summary" : "Get the version of the running rest component",
+        "description" : "Returns the version of the running catapult-rest component.",
+        "operationId" : "getServerInfo",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/network" : {
+      "get" : {
+        "tags" : [ "Network routes" ],
+        "summary" : "Get the current network type of the chain",
+        "description" : "Returns the current network type.",
+        "operationId" : "getNetworkType",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NetworkTypeDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node/info" : {
+      "get" : {
+        "tags" : [ "Node routes" ],
+        "summary" : "Get the node information",
+        "description" : "Supplies additional information about the application running on a node.",
+        "operationId" : "getNodeInfo",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NodeInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/node/time" : {
+      "get" : {
+        "tags" : [ "Node routes" ],
+        "summary" : "Get the node time",
+        "description" : "Gets the node time at the moment the reply was sent and received.",
+        "operationId" : "getNodeTime",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NodeTimeDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{transactionId}" : {
+      "get" : {
+        "tags" : [ "Transaction routes" ],
+        "summary" : "Get transaction information",
+        "description" : "Returns transaction information given a transactionId or hash.",
+        "operationId" : "getTransaction",
+        "parameters" : [ {
+          "name" : "transactionId",
+          "in" : "path",
+          "description" : "Transaction identifier or hash.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction" : {
+      "put" : {
+        "tags" : [ "Transaction routes" ],
+        "summary" : "Announce a new transaction",
+        "description" : "Announces a transaction to the network.\nWe recommended to use the NEM2-SDK to announce transactions as they should be serialized.\n",
+        "operationId" : "announceTransaction",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/transactionPayload"
+        },
+        "responses" : {
+          "202" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AnnounceTransactionInfoDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Transaction routes" ],
+        "summary" : "Get transactions information",
+        "description" : "Returns transactions information for a given array of transactionIds.",
+        "operationId" : "getTransactions",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/transactionIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of transactions information.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{hash}/status" : {
+      "get" : {
+        "tags" : [ "Transaction routes" ],
+        "summary" : "Get transaction status",
+        "description" : "Returns the transaction status for a given hash.",
+        "operationId" : "getTransactionStatus",
+        "parameters" : [ {
+          "name" : "hash",
+          "in" : "path",
+          "description" : "Transaction hash.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Hash256"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionStatusDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/statuses" : {
+      "post" : {
+        "tags" : [ "Transaction routes" ],
+        "summary" : "Get transactions status",
+        "description" : "Returns an array of transaction statuses for a given array of transaction hashes.",
+        "operationId" : "getTransactionsStatuses",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/transactionHashes"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of transactions status.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TransactionStatusDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/partial" : {
+      "put" : {
+        "tags" : [ "Transaction routes" ],
+        "summary" : "Announce an aggregate bonded transaction",
+        "description" : "Announces an aggregate bonded transaction to the network.",
+        "operationId" : "announcePartialTransaction",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/transactionPayload"
+        },
+        "responses" : {
+          "202" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AnnounceTransactionInfoDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/cosignature" : {
+      "put" : {
+        "tags" : [ "Transaction routes" ],
+        "summary" : "Announce a cosignature transaction",
+        "description" : "Announces a cosignature transaction to the network.",
+        "operationId" : "announceCosignatureTransaction",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/cosignature"
+        },
+        "responses" : {
+          "202" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AnnounceTransactionInfoDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/account/{accountId}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get account metadata",
+        "description" : "Returns the account metadata given an account id.",
+        "operationId" : "getAccountMetadata",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Metadata identifier up to which metadata are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataEntriesDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/mosaic/{mosaicId}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get mosaic metadata",
+        "description" : "Returns the mosaic metadata given a mosaic id.",
+        "operationId" : "getMosaicMetadata",
+        "parameters" : [ {
+          "name" : "mosaicId",
+          "in" : "path",
+          "description" : "Mosaic identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Metadata identifier up to which metadata are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataEntriesDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/namespace/{namespaceId}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get namespace metadata",
+        "description" : "Returns the namespace metadata given a namespace id.",
+        "operationId" : "getNamespaceMetadata",
+        "parameters" : [ {
+          "name" : "namespaceId",
+          "in" : "path",
+          "description" : "Namespace identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Metadata identifier up to which metadata are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "-id"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataEntriesDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/account/{accountId}/key/{key}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get account metadata",
+        "description" : "Returns the account metadata given an account id and a key.",
+        "operationId" : "getAccountMetadataByKey",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "description" : "Metadata key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataEntriesDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/mosaic/{mosaicId}/key/{key}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get mosaic metadata",
+        "description" : "Returns the mosaic metadata given a mosaic id and a key.",
+        "operationId" : "getMosaicMetadataByKey",
+        "parameters" : [ {
+          "name" : "mosaicId",
+          "in" : "path",
+          "description" : "Mosaic identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          }
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "description" : "Metadata key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataEntriesDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/namespace/{namespaceId}/key/{key}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get namespace metadata",
+        "description" : "Returns the namespace metadata given a namespace id and a key.",
+        "operationId" : "getNamespaceMetadataByKey",
+        "parameters" : [ {
+          "name" : "namespaceId",
+          "in" : "path",
+          "description" : "Namespace identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          }
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "description" : "Metadata key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataEntriesDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/account/{accountId}/key/{key}/sender/{publicKey}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get account metadata",
+        "description" : "Returns the account metadata given an account id, a key, and a sender.",
+        "operationId" : "getAccountMetadataByKeyAndSender",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "description" : "Metadata key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          }
+        }, {
+          "name" : "publicKey",
+          "in" : "path",
+          "description" : "Account public key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/mosaic/{mosaicId}/key/{key}/sender/{publicKey}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get mosaic metadata",
+        "description" : "Returns the mosaic metadata given a mosaic id, a key, and a sender.",
+        "operationId" : "getMosaicMetadataByKeyAndSender",
+        "parameters" : [ {
+          "name" : "mosaicId",
+          "in" : "path",
+          "description" : "Mosaic identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          }
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "description" : "Metadata key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          }
+        }, {
+          "name" : "publicKey",
+          "in" : "path",
+          "description" : "Account public key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata/namespace/{namespaceId}/key/{key}/sender/{publicKey}" : {
+      "get" : {
+        "tags" : [ "Metadata routes" ],
+        "summary" : "Get namespace metadata",
+        "description" : "Returns the namespace metadata given a namespace id, a key, and a sender.",
+        "operationId" : "getNamespaceMetadataByKeyAndSender",
+        "parameters" : [ {
+          "name" : "namespaceId",
+          "in" : "path",
+          "description" : "Namespace identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          }
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "description" : "Metadata key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          }
+        }, {
+          "name" : "publicKey",
+          "in" : "path",
+          "description" : "Account public key.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MetadataDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mosaic/{mosaicId}" : {
+      "get" : {
+        "tags" : [ "Mosaic routes" ],
+        "summary" : "Get mosaic information",
+        "description" : "Gets the mosaic definition for a given mosaic identifier.",
+        "operationId" : "getMosaic",
+        "parameters" : [ {
+          "name" : "mosaicId",
+          "in" : "path",
+          "description" : "Mosaic identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MosaicInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mosaic" : {
+      "post" : {
+        "tags" : [ "Mosaic routes" ],
+        "summary" : "Get mosaics information for an array of mosaics",
+        "description" : "Gets an array of mosaic definition.",
+        "operationId" : "getMosaics",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/mosaicIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of mosaics information.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/MosaicInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/mosaics" : {
+      "get" : {
+        "tags" : [ "Mosaic routes" ],
+        "summary" : "Get mosaics created by an account",
+        "description" : "Gets an array of mosaics created for a given account address.",
+        "operationId" : "getMosaicsFromAccount",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MosaicsInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/mosaics" : {
+      "post" : {
+        "tags" : [ "Mosaic routes" ],
+        "summary" : "Get mosaics created for given array of addresses",
+        "description" : "Gets mosaics created for a given array of addresses.",
+        "operationId" : "getMosaicsFromAccounts",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/accountIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MosaicsInfoDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/multisig" : {
+      "get" : {
+        "tags" : [ "Multisig routes" ],
+        "summary" : "Get multisig account information",
+        "description" : "Returns the multisig account information.",
+        "operationId" : "getAccountMultisig",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MultisigAccountInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/multisig/graph" : {
+      "get" : {
+        "tags" : [ "Multisig routes" ],
+        "summary" : "Get multisig account graph information",
+        "description" : "Returns the multisig account graph.",
+        "operationId" : "getAccountMultisigGraph",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/MultisigAccountGraphInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/namespace/{namespaceId}" : {
+      "get" : {
+        "tags" : [ "Namespace routes" ],
+        "summary" : "Get namespace information",
+        "description" : "Gets the namespace for a given namespace identifier.",
+        "operationId" : "getNamespace",
+        "parameters" : [ {
+          "name" : "namespaceId",
+          "in" : "path",
+          "description" : "Namespace identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NamespaceInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountId}/namespaces" : {
+      "get" : {
+        "tags" : [ "Namespace routes" ],
+        "summary" : "Get namespaces created by an account",
+        "description" : "Gets an array of namespaces for a given account address.",
+        "operationId" : "getNamespacesFromAccount",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "Number of transactions to return for each request.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 100.0,
+            "minimum" : 10.0,
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Namespace identifier up to which transactions are returned.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NamespacesInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/namespaces" : {
+      "post" : {
+        "tags" : [ "Namespace routes" ],
+        "summary" : "Get namespaces for given array of addresses",
+        "description" : "Gets namespaces for a given array of addresses.",
+        "operationId" : "getNamespacesFromAccounts",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/accountIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NamespacesInfoDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/names" : {
+      "post" : {
+        "tags" : [ "Namespace routes" ],
+        "summary" : "Get readable names for a set of accountIds",
+        "description" : "Returns friendly names for accounts.",
+        "operationId" : "getAccountsNames",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/accountIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountsNamesDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mosaic/names" : {
+      "post" : {
+        "tags" : [ "Namespace routes" ],
+        "summary" : "Get readable names for a set of mosaics",
+        "description" : "Returns friendly names for mosaics.",
+        "operationId" : "getMosaicsNames",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/mosaicIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MosaicsNamesDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/namespace/names" : {
+      "post" : {
+        "tags" : [ "Namespace routes" ],
+        "summary" : "Get readable names for a set of namespaces",
+        "description" : "Returns friendly names for namespaces.",
+        "operationId" : "getNamespacesNames",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/namespaceIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of namespace names.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/NamespaceNameDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/block/{height}/receipts" : {
+      "get" : {
+        "tags" : [ "Receipt routes" ],
+        "summary" : "Get receipts from a block",
+        "description" : "Returns the receipts linked to a block.",
+        "operationId" : "getBlockReceipts",
+        "parameters" : [ {
+          "name" : "height",
+          "in" : "path",
+          "description" : "Block height.\nIf height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StatementsDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/block/{height}/receipt/{hash}/merkle" : {
+      "get" : {
+        "tags" : [ "Receipt routes" ],
+        "summary" : "Get the merkle path for a given a receipt statement hash and block",
+        "description" : "Returns the merkle path for a receipt statement or resolution linked to a block.\nThe path is the complementary data needed to calculate the merkle root.\nA client can compare if the calculated root equals the one recorded in the block header,\nverifying that the receipt was linked with the block.\n",
+        "operationId" : "getMerkleReceipts",
+        "parameters" : [ {
+          "name" : "height",
+          "in" : "path",
+          "description" : "Block height.\nIf height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }, {
+          "name" : "hash",
+          "in" : "path",
+          "description" : "Receipt hash.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/Hash256"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MerkleProofInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restrictions/account/{accountId}" : {
+      "get" : {
+        "tags" : [ "Restriction Account routes" ],
+        "summary" : "Get the account restrictions",
+        "description" : "Returns the account restrictions for a given account.",
+        "operationId" : "getAccountRestrictions",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountRestrictionsInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restrictions/account" : {
+      "post" : {
+        "tags" : [ "Restriction Account routes" ],
+        "summary" : "Get account restrictions for given array of addresses",
+        "description" : "Returns the account restrictions for a given array of addresses.",
+        "operationId" : "getAccountRestrictionsFromAccounts",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/accountIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of account restrictions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/AccountRestrictionsInfoDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restrictions/mosaic/{mosaicId}" : {
+      "get" : {
+        "tags" : [ "Restriction Mosaic routes" ],
+        "summary" : "Get mosaic global restriction for a given mosaic identifier.",
+        "description" : "Get mosaic global restriction.",
+        "operationId" : "getMosaicGlobalRestriction",
+        "parameters" : [ {
+          "name" : "mosaicId",
+          "in" : "path",
+          "description" : "Mosaic identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MosaicGlobalRestrictionDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Restriction Mosaic routes" ],
+        "summary" : "Get mosaic address restrictions for a given mosaic and account identifiers array.",
+        "description" : "Get mosaic address restrictions.",
+        "operationId" : "getMosaicAddressRestrictions",
+        "parameters" : [ {
+          "name" : "mosaicId",
+          "in" : "path",
+          "description" : "Mosaic identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/accountIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of mosaics address restrictions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/MosaicAddressRestrictionDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restrictions/mosaic/{mosaicId}/address/{accountId}" : {
+      "get" : {
+        "tags" : [ "Restriction Mosaic routes" ],
+        "summary" : "Get mosaic address restrictions for a given mosaic and account identifier.",
+        "description" : "Get mosaic address restriction.",
+        "operationId" : "getMosaicAddressRestriction",
+        "parameters" : [ {
+          "name" : "mosaicId",
+          "in" : "path",
+          "description" : "Mosaic identifier.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          }
+        }, {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "Account public key or address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MosaicAddressRestrictionDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "ResourceNotFound",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/restrictions/mosaic" : {
+      "post" : {
+        "tags" : [ "Restriction Mosaic routes" ],
+        "summary" : "Get mosaic global restrictions for an array of mosaics.",
+        "description" : "Get mosaic global restrictions.",
+        "operationId" : "getMosaicGlobalRestrictions",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/mosaicIds"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "description" : "Array of mosaics global restrictions.",
+                  "items" : {
+                    "$ref" : "#/components/schemas/MosaicGlobalRestrictionDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "InvalidContent",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "InvalidArgument",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Address" : {
+        "type" : "string",
+        "description" : "Decoded address.",
+        "example" : "9081FCCB41F8C8409A9B99E485E0E28D23BD6304EF7215E01A"
+      },
+      "Amount" : {
+        "type" : "string",
+        "description" : "Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative)."
+      },
+      "BlockDuration" : {
+        "type" : "string",
+        "description" : "Duration expressed in number of blocks.",
+        "example" : "200"
+      },
+      "BlockFeeMultiplier" : {
+        "type" : "integer",
+        "description" : "Fee multiplier applied to transactions contained in block.",
+        "format" : "int32",
+        "example" : 0
+      },
+      "Difficulty" : {
+        "type" : "string",
+        "description" : "Defines how difficult it will be to harvest next the block, based on previous blocks.",
+        "example" : "100000000000000"
+      },
+      "Hash256" : {
+        "type" : "string",
+        "example" : "C8FC3FB54FDDFBCE0E8C71224990124E4EEC5AD5D30E592EDFA9524669A23810"
+      },
+      "Height" : {
+        "type" : "string",
+        "description" : "Height of the blockchain.",
+        "example" : "1"
+      },
+      "Importance" : {
+        "type" : "string",
+        "description" : "Probability of an account to harvest the next block.",
+        "example" : "0"
+      },
+      "MetadataKey" : {
+        "type" : "string",
+        "description" : "Metadata key scoped to source, target and type.",
+        "format" : "hex",
+        "example" : "0DC67FBE1CAD29E3"
+      },
+      "ModelError" : {
+        "required" : [ "code", "message" ],
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "MosaicId" : {
+        "type" : "string",
+        "description" : "Mosaic identifier.",
+        "format" : "hex",
+        "example" : "0DC67FBE1CAD29E3"
+      },
+      "Mosaic" : {
+        "required" : [ "amount", "id" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "amount" : {
+            "$ref" : "#/components/schemas/Amount"
+          }
+        }
+      },
+      "MosaicRestrictionKey" : {
+        "type" : "string",
+        "description" : "Restriction key.",
+        "format" : "hex",
+        "example" : "0DC67FBE1CAD29E3"
+      },
+      "NamespaceId" : {
+        "type" : "string",
+        "description" : "Namespace identifier.",
+        "format" : "hex",
+        "example" : "85BBEA6CC462B244"
+      },
+      "PublicKey" : {
+        "type" : "string",
+        "example" : "AC1A6E1D8DE5B17D2C6B1293F1CAD3829EEACF38D09311BB3C8E5A880092DE26"
+      },
+      "Score" : {
+        "type" : "string",
+        "description" : "Score of the blockchain.During synchronization, nodes try to get the\nblockchain with highest score in the network.\n",
+        "example" : "1683298087010368300"
+      },
+      "Signature" : {
+        "type" : "string",
+        "description" : "Entity's signature generated by the signer.",
+        "example" : "4B408BBEDF25F2AC8E0E44A6E51E3CCBA03885902055F75EB9FF50433532CA44BF9175FDA7502EEE2FC1617126E453A2BD692BAFDAAF06BC8EDEBA7961B3730D"
+      },
+      "Timestamp" : {
+        "type" : "string",
+        "description" : "Number of seconds elapsed since the creation of the nemesis block.",
+        "example" : "108303181802"
+      },
+      "UnresolvedAddress" : {
+        "type" : "string",
+        "description" : "Address decoded. If the bit 0 of byte 0 is not set (like in 0x90), then it is a\nregular address. Else (e.g. 0x91) it represents a namespace id which starts at byte 1.\n",
+        "example" : "9081FCCB41F8C8409A9B99E485E0E28D23BD6304EF7215E01A"
+      },
+      "UnresolvedMosaicId" : {
+        "type" : "string",
+        "description" : "Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias)\nis used instead of the real mosaic identifier.\n",
+        "format" : "hex",
+        "example" : "85BBEA6CC462B244"
+      },
+      "UnresolvedMosaic" : {
+        "required" : [ "amount", "id" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "amount" : {
+            "$ref" : "#/components/schemas/Amount"
+          }
+        }
+      },
+      "RestrictionValue" : {
+        "type" : "string",
+        "description" : "A value in a restriction transaction.",
+        "example" : "1000"
+      },
+      "AccountTypeEnum" : {
+        "type" : "integer",
+        "description" : "* 0 - Unlinked.\n* 1 - Balance-holding account that is linked to a remote harvester account.\n* 2 - Remote harvester account that is linked to a balance-holding account.\n* 3 - Remote harvester eligible account that is unlinked.\n",
+        "format" : "int32",
+        "enum" : [ 0, 1, 2, 3 ]
+      },
+      "AccountDTO" : {
+        "required" : [ "accountType", "activityBuckets", "address", "addressHeight", "importance", "importanceHeight", "linkedAccountKey", "mosaics", "publicKey", "publicKeyHeight" ],
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "addressHeight" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "publicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "publicKeyHeight" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "accountType" : {
+            "$ref" : "#/components/schemas/AccountTypeEnum"
+          },
+          "linkedAccountKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "activityBuckets" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ActivityBucketDTO"
+            }
+          },
+          "mosaics" : {
+            "type" : "array",
+            "description" : "Mosaic units owned. The amount is represented in absolute amount.\nThus a balance of 123456789 for a mosaic with divisibility 6 (absolute) means the account owns 123.456789.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Mosaic"
+            }
+          },
+          "importance" : {
+            "$ref" : "#/components/schemas/Importance"
+          },
+          "importanceHeight" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }
+      },
+      "AccountInfoDTO" : {
+        "required" : [ "account" ],
+        "type" : "object",
+        "properties" : {
+          "account" : {
+            "$ref" : "#/components/schemas/AccountDTO"
+          }
+        }
+      },
+      "ActivityBucketDTO" : {
+        "required" : [ "beneficiaryCount", "rawScore", "startHeight", "totalFeesPaid" ],
+        "type" : "object",
+        "properties" : {
+          "startHeight" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "totalFeesPaid" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "beneficiaryCount" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "rawScore" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "BlockDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/VerifiableEntityDTO"
+        }, {
+          "$ref" : "#/components/schemas/EntityDTO"
+        }, {
+          "required" : [ "beneficiaryPublicKey", "difficulty", "feeMultiplier", "height", "previousBlockHash", "receiptsHash", "stateHash", "timestamp", "transactionsHash" ],
+          "type" : "object",
+          "properties" : {
+            "height" : {
+              "$ref" : "#/components/schemas/Height"
+            },
+            "timestamp" : {
+              "$ref" : "#/components/schemas/Timestamp"
+            },
+            "difficulty" : {
+              "$ref" : "#/components/schemas/Difficulty"
+            },
+            "previousBlockHash" : {
+              "$ref" : "#/components/schemas/Hash256"
+            },
+            "transactionsHash" : {
+              "$ref" : "#/components/schemas/Hash256"
+            },
+            "receiptsHash" : {
+              "$ref" : "#/components/schemas/Hash256"
+            },
+            "stateHash" : {
+              "$ref" : "#/components/schemas/Hash256"
+            },
+            "beneficiaryPublicKey" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            },
+            "feeMultiplier" : {
+              "$ref" : "#/components/schemas/BlockFeeMultiplier"
+            }
+          }
+        } ]
+      },
+      "BlockInfoDTO" : {
+        "required" : [ "block", "meta" ],
+        "type" : "object",
+        "properties" : {
+          "meta" : {
+            "$ref" : "#/components/schemas/BlockMetaDTO"
+          },
+          "block" : {
+            "$ref" : "#/components/schemas/BlockDTO"
+          }
+        }
+      },
+      "BlockMetaDTO" : {
+        "required" : [ "generationHash", "hash", "numTransactions", "stateHashSubCacheMerkleRoots", "totalFee" ],
+        "type" : "object",
+        "properties" : {
+          "hash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "totalFee" : {
+            "$ref" : "#/components/schemas/Amount"
+          },
+          "generationHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "stateHashSubCacheMerkleRoots" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Hash256"
+            }
+          },
+          "numTransactions" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 0
+          },
+          "numStatements" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 1
+          }
+        }
+      },
+      "MerklePathItemDTO" : {
+        "type" : "object",
+        "properties" : {
+          "position" : {
+            "type" : "integer",
+            "format" : "uint32",
+            "example" : 1
+          },
+          "hash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          }
+        }
+      },
+      "MerkleProofInfoDTO" : {
+        "type" : "object",
+        "properties" : {
+          "merklePath" : {
+            "type" : "array",
+            "description" : "Complementary data needed to calculate the merkle root.",
+            "items" : {
+              "$ref" : "#/components/schemas/MerklePathItemDTO"
+            }
+          }
+        }
+      },
+      "ChainScoreDTO" : {
+        "required" : [ "scoreHigh", "scoreLow" ],
+        "type" : "object",
+        "properties" : {
+          "scoreHigh" : {
+            "$ref" : "#/components/schemas/Score"
+          },
+          "scoreLow" : {
+            "$ref" : "#/components/schemas/Score"
+          }
+        }
+      },
+      "HeightInfoDTO" : {
+        "required" : [ "height" ],
+        "type" : "object",
+        "properties" : {
+          "height" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }
+      },
+      "ServerDTO" : {
+        "required" : [ "restVersion", "sdkVersion" ],
+        "type" : "object",
+        "properties" : {
+          "restVersion" : {
+            "type" : "string",
+            "description" : "catapult-rest component version.",
+            "example" : "1.0.14"
+          },
+          "sdkVersion" : {
+            "type" : "string",
+            "description" : "catapult-sdk component version.",
+            "example" : "0.7.14"
+          }
+        }
+      },
+      "ServerInfoDTO" : {
+        "required" : [ "serverInfo" ],
+        "type" : "object",
+        "properties" : {
+          "serverInfo" : {
+            "$ref" : "#/components/schemas/ServerDTO"
+          }
+        }
+      },
+      "StorageInfoDTO" : {
+        "required" : [ "numAccounts", "numBlocks", "numTransactions" ],
+        "type" : "object",
+        "properties" : {
+          "numBlocks" : {
+            "type" : "integer",
+            "description" : "Number of blocks stored.",
+            "format" : "int64",
+            "example" : 245053
+          },
+          "numTransactions" : {
+            "type" : "integer",
+            "description" : "Number of transactions stored.",
+            "format" : "int64",
+            "example" : 58590
+          },
+          "numAccounts" : {
+            "type" : "integer",
+            "description" : "Number of accounts created.",
+            "format" : "int64",
+            "example" : 177
+          }
+        }
+      },
+      "NetworkTypeEnum" : {
+        "type" : "integer",
+        "description" : "Network type:\n* 0x60 (96 decimal) - Private network.\n* 0x90 (144 decimal) - Private test network.\n* 0x68 (104 decimal) - Public main network.\n* 0x98 (152 decimal) - Public test network.\n",
+        "format" : "int32",
+        "example" : 144,
+        "enum" : [ 104, 152, 96, 144 ]
+      },
+      "EntityDTO" : {
+        "required" : [ "network", "signerPublicKey", "type", "version" ],
+        "type" : "object",
+        "properties" : {
+          "signerPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "version" : {
+            "type" : "integer",
+            "description" : "Entity version.",
+            "format" : "int32"
+          },
+          "network" : {
+            "$ref" : "#/components/schemas/NetworkTypeEnum"
+          },
+          "type" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "VerifiableEntityDTO" : {
+        "required" : [ "signature" ],
+        "type" : "object",
+        "properties" : {
+          "signature" : {
+            "$ref" : "#/components/schemas/Signature"
+          }
+        }
+      },
+      "NetworkTypeDTO" : {
+        "required" : [ "description", "name" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Network name.",
+            "example" : "mijinTest"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "A short text describing the network.",
+            "example" : "catapult development network"
+          }
+        }
+      },
+      "RolesTypeEnum" : {
+        "type" : "integer",
+        "description" : "Role of the node:\n* 1 - Peer node.\n* 2 - Api node.\n",
+        "format" : "int32",
+        "example" : 2,
+        "enum" : [ 1, 2 ]
+      },
+      "CommunicationTimestampsDTO" : {
+        "type" : "object",
+        "properties" : {
+          "sendTimestamp" : {
+            "$ref" : "#/components/schemas/Timestamp"
+          },
+          "receiveTimestamp" : {
+            "$ref" : "#/components/schemas/Timestamp"
+          }
+        }
+      },
+      "NodeInfoDTO" : {
+        "required" : [ "friendlyName", "host", "networkIdentifier", "port", "publicKey", "roles", "version" ],
+        "type" : "object",
+        "properties" : {
+          "version" : {
+            "type" : "integer",
+            "description" : "Version of the application.",
+            "format" : "int32",
+            "example" : 0
+          },
+          "publicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "roles" : {
+            "$ref" : "#/components/schemas/RolesTypeEnum"
+          },
+          "port" : {
+            "type" : "integer",
+            "description" : "Port used for the communication.",
+            "format" : "int32",
+            "example" : 7900
+          },
+          "networkIdentifier" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 144
+          },
+          "friendlyName" : {
+            "type" : "string",
+            "description" : "Node friendly name.",
+            "example" : "api-node-0"
+          },
+          "host" : {
+            "type" : "string",
+            "description" : "Node IP address.",
+            "example" : "127.0.0.1"
+          }
+        }
+      },
+      "NodeTimeDTO" : {
+        "required" : [ "communicationTimestamps" ],
+        "type" : "object",
+        "properties" : {
+          "communicationTimestamps" : {
+            "$ref" : "#/components/schemas/CommunicationTimestampsDTO"
+          }
+        }
+      },
+      "TransactionTypeEnum" : {
+        "type" : "integer",
+        "description" : "Type of transaction:\n* 0x414C (16716 decimal) - AccountLinkTransaction.\n* 0x4141 (16705 decimal) - AggregateCompleteTransaction.\n* 0x4241 (16961 decimal) - AggregateBondedTransaction.\n* 0x414D (16717 decimal) - MosaicDefinitionTransaction.\n* 0x424D (16973 decimal) - MosaicSupplyChangeTransaction.\n* 0x414E (16718 decimal) - NamespaceRegistrationTransaction.\n* 0x424E (16974 decimal) - AddressAliasTransaction.\n* 0x434E (17230 decimal) - MosaicAliasTransaction.\n* 0x4144 (16708 decimal) - AccountMetadataTransaction.\n* 0x4244 (16964 decimal) - MosaicMetadataTransaction.\n* 0x4344 (17220 decimal) - NamespaceMetadataTransaction.\n* 0x4155 (16725 decimal) - MultisigAccountModificationTransaction.\n* 0x4148 (16712 decimal) - HashLockTransaction.\n* 0x4152 (16722 decimal) - SecretLockTransaction.\n* 0x4252 (16978 decimal) - SecretProofTransaction.\n* 0x4150 (16720 decimal) - AccountAddressRestrictionTransaction.\n* 0x4250 (16976 decimal) - AccountMosaicRestrictionTransaction.\n* 0x4350 (17232 decimal) - AccountOperationRestrictionTransaction.\n* 0x4151 (16721 decimal) - MosaicGlobalRestrictionTransaction.\n* 0x4251 (16977 decimal) - MosaicAddressRestrictionTransaction.\n* 0x4154 (16724 decimal) - TransferTransaction.\n",
+        "enum" : [ 16716, 16705, 16961, 16717, 16973, 16718, 16974, 17230, 16708, 16964, 17220, 16725, 16712, 16722, 16978, 16720, 16976, 17232, 16721, 16977, 16724 ]
+      },
+      "AnnounceTransactionInfoDTO" : {
+        "required" : [ "message" ],
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "EmbeddedTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EntityDTO"
+        }, {
+          "$ref" : "#/components/schemas/TransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedTransactionInfoDTO" : {
+        "required" : [ "meta", "transaction" ],
+        "type" : "object",
+        "properties" : {
+          "meta" : {
+            "$ref" : "#/components/schemas/EmbeddedTransactionMetaDTO"
+          },
+          "transaction" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/EmbeddedAccountLinkTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedHashLockTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedSecretLockTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedSecretProofTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedAccountMetadataTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedMosaicMetadataTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedNamespaceMetadataTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedMosaicDefinitionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedMosaicSupplyChangeTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedNamespaceRegistrationTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedAddressAliasTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedMosaicAliasTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedMultisigAccountModificationTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedAccountAddressRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedAccountMosaicRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedAccountOperationRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedMosaicGlobalRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedMosaicAddressRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/EmbeddedTransferTransactionDTO"
+            } ]
+          }
+        }
+      },
+      "EmbeddedTransactionMetaDTO" : {
+        "required" : [ "aggregateHash", "aggregateId", "height", "id", "index" ],
+        "type" : "object",
+        "properties" : {
+          "height" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "aggregateHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "aggregateId" : {
+            "type" : "string"
+          },
+          "index" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "id" : {
+            "type" : "string"
+          }
+        }
+      },
+      "TransactionBodyDTO" : {
+        "required" : [ "deadline", "maxFee" ],
+        "type" : "object",
+        "properties" : {
+          "maxFee" : {
+            "$ref" : "#/components/schemas/Amount"
+          },
+          "deadline" : {
+            "$ref" : "#/components/schemas/BlockDuration"
+          }
+        }
+      },
+      "TransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/VerifiableEntityDTO"
+        }, {
+          "$ref" : "#/components/schemas/EntityDTO"
+        }, {
+          "$ref" : "#/components/schemas/TransactionBodyDTO"
+        } ]
+      },
+      "TransactionInfoDTO" : {
+        "required" : [ "meta", "transaction" ],
+        "type" : "object",
+        "properties" : {
+          "meta" : {
+            "$ref" : "#/components/schemas/TransactionMetaDTO"
+          },
+          "transaction" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/AccountLinkTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/AggregateTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/HashLockTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/SecretLockTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/SecretProofTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/AccountMetadataTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/MosaicMetadataTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/NamespaceMetadataTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/MosaicDefinitionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/MosaicSupplyChangeTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/NamespaceRegistrationTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/AddressAliasTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/MosaicAliasTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/MultisigAccountModificationTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/AccountAddressRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/AccountMosaicRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/AccountOperationRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/MosaicGlobalRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/MosaicAddressRestrictionTransactionDTO"
+            }, {
+              "$ref" : "#/components/schemas/TransferTransactionDTO"
+            } ]
+          }
+        }
+      },
+      "TransactionMetaDTO" : {
+        "required" : [ "hash", "height", "id", "index", "merkleComponentHash" ],
+        "type" : "object",
+        "properties" : {
+          "height" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "hash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "merkleComponentHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "index" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "id" : {
+            "type" : "string"
+          }
+        }
+      },
+      "TransactionStatusDTO" : {
+        "required" : [ "status" ],
+        "type" : "object",
+        "properties" : {
+          "group" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "hash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "deadline" : {
+            "$ref" : "#/components/schemas/BlockDuration"
+          },
+          "height" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }
+      },
+      "AccountLinkActionEnum" : {
+        "type" : "integer",
+        "description" : "Type of action:\n* 0 - Unlink.\n* 1 - Link.\n",
+        "format" : "int32",
+        "enum" : [ 0, 1 ]
+      },
+      "AccountLinkTransactionBodyDTO" : {
+        "required" : [ "linkAction", "remotePublicKey" ],
+        "type" : "object",
+        "properties" : {
+          "remotePublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "linkAction" : {
+            "$ref" : "#/components/schemas/AccountLinkActionEnum"
+          }
+        }
+      },
+      "AccountLinkTransactionDTO" : {
+        "type" : "object",
+        "description" : "Delegates the account importance score to a proxy account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountLinkTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedAccountLinkTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountLinkTransactionBodyDTO"
+        } ]
+      },
+      "AggregateTransactionBodyDTO" : {
+        "required" : [ "cosignatures", "transactions", "transactionsHash" ],
+        "type" : "object",
+        "properties" : {
+          "transactionsHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "cosignatures" : {
+            "type" : "array",
+            "description" : "Array of transaction cosignatures.",
+            "items" : {
+              "$ref" : "#/components/schemas/CosignatureDTO"
+            }
+          },
+          "transactions" : {
+            "type" : "array",
+            "description" : "Array of transactions initiated by different accounts.",
+            "items" : {
+              "$ref" : "#/components/schemas/EmbeddedTransactionInfoDTO"
+            }
+          }
+        }
+      },
+      "AggregateTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to combine multiple transactions together.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AggregateTransactionBodyDTO"
+        } ]
+      },
+      "CosignatureDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/VerifiableEntityDTO"
+        }, {
+          "required" : [ "signerPublicKey" ],
+          "type" : "object",
+          "properties" : {
+            "signerPublicKey" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            }
+          }
+        } ]
+      },
+      "EmbeddedHashLockTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/HashLockTransactionBodyDTO"
+        } ]
+      },
+      "HashLockTransactionBodyDTO" : {
+        "required" : [ "amount", "duration", "hash", "mosaicId" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "amount" : {
+            "$ref" : "#/components/schemas/Amount"
+          },
+          "duration" : {
+            "$ref" : "#/components/schemas/BlockDuration"
+          },
+          "hash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          }
+        }
+      },
+      "HashLockTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to lock funds before sending an aggregate bonded transaction.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/HashLockTransactionBodyDTO"
+        } ]
+      },
+      "LockHashAlgorithmEnum" : {
+        "type" : "integer",
+        "description" : "Algorithm used to hash te proof:\n* 0 (Op_Sha3_256) - Proof is hashed using sha3 256.\n* 1 (Op_Keccak_256) - Proof is hashed using Keccak (ETH compatibility).\n* 2 (Op_Hash_160) - Proof is hashed twice: first with Sha-256 and then with RIPEMD-160 (bitcoin’s OP_HASH160).\n* 3 (Op_Hash_256) - Proof is hashed twice with Sha-256 (bitcoin’s OP_HASH256).\n",
+        "format" : "int32",
+        "enum" : [ 0, 1, 2, 3 ]
+      },
+      "EmbeddedSecretLockTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/SecretLockTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedSecretProofTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/SecretProofTransactionBodyDTO"
+        } ]
+      },
+      "SecretLockTransactionBodyDTO" : {
+        "required" : [ "amount", "duration", "hashAlgorithm", "mosaicId", "recipientAddress", "secret" ],
+        "type" : "object",
+        "properties" : {
+          "secret" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "amount" : {
+            "$ref" : "#/components/schemas/Amount"
+          },
+          "duration" : {
+            "$ref" : "#/components/schemas/BlockDuration"
+          },
+          "hashAlgorithm" : {
+            "$ref" : "#/components/schemas/LockHashAlgorithmEnum"
+          },
+          "recipientAddress" : {
+            "$ref" : "#/components/schemas/UnresolvedAddress"
+          }
+        }
+      },
+      "SecretLockTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to sends mosaics to a recipient if the proof used is revealed. If the duration is reached, the locked funds go back to the sender of the transaction.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/SecretLockTransactionBodyDTO"
+        } ]
+      },
+      "SecretProofTransactionBodyDTO" : {
+        "required" : [ "hashAlgorithm", "proof", "recipientAddress", "secret" ],
+        "type" : "object",
+        "properties" : {
+          "secret" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "hashAlgorithm" : {
+            "$ref" : "#/components/schemas/LockHashAlgorithmEnum"
+          },
+          "recipientAddress" : {
+            "$ref" : "#/components/schemas/UnresolvedAddress"
+          },
+          "proof" : {
+            "type" : "string",
+            "description" : "Original random set of bytes."
+          }
+        }
+      },
+      "SecretProofTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to reveal a proof.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/SecretProofTransactionBodyDTO"
+        } ]
+      },
+      "MetadataTypeEnum" : {
+        "type" : "integer",
+        "description" : "Metadata type:\n* 0 - Account.\n* 1 - Mosaic.\n* 2 - Namespace.\n",
+        "format" : "int32",
+        "enum" : [ 0, 1, 2 ]
+      },
+      "AccountMetadataTransactionBodyDTO" : {
+        "required" : [ "scopedMetadataKey", "targetPublicKey", "value", "valueSize", "valueSizeDelta" ],
+        "type" : "object",
+        "properties" : {
+          "targetPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "scopedMetadataKey" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          },
+          "valueSizeDelta" : {
+            "type" : "integer",
+            "description" : "Change in value size in bytes.",
+            "format" : "int32"
+          },
+          "valueSize" : {
+            "type" : "integer",
+            "description" : "Value size in bytes.",
+            "format" : "int32"
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "When there is an existing value, the new value is calculated as xor(previous-value, value).",
+            "format" : "hex"
+          }
+        }
+      },
+      "AccountMetadataTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to create or modify a multisig account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountMetadataTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedAccountMetadataTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountMetadataTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedMosaicMetadataTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicMetadataTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedNamespaceMetadataTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/NamespaceMetadataTransactionBodyDTO"
+        } ]
+      },
+      "MetadataDTO" : {
+        "required" : [ "id", "metadataEntry" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "metadataEntry" : {
+            "$ref" : "#/components/schemas/MetadataEntryDTO"
+          }
+        }
+      },
+      "MetadataEntriesDTO" : {
+        "required" : [ "metadataEntries" ],
+        "type" : "object",
+        "properties" : {
+          "metadataEntries" : {
+            "type" : "array",
+            "description" : "Array of account metadata.",
+            "items" : {
+              "$ref" : "#/components/schemas/MetadataDTO"
+            }
+          }
+        }
+      },
+      "MetadataEntryDTO" : {
+        "required" : [ "compositeHash", "metadataType", "scopedMetadataKey", "senderPublicKey", "targetPublicKey", "value" ],
+        "type" : "object",
+        "properties" : {
+          "compositeHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "senderPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "targetPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "scopedMetadataKey" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          },
+          "targetId" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/MosaicId"
+            }, {
+              "$ref" : "#/components/schemas/NamespaceId"
+            } ]
+          },
+          "metadataType" : {
+            "$ref" : "#/components/schemas/MetadataTypeEnum"
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "Metadata value.",
+            "format" : "hex"
+          }
+        }
+      },
+      "MosaicMetadataTransactionBodyDTO" : {
+        "required" : [ "scopedMetadataKey", "targetMosaicId", "targetPublicKey", "value", "valueSize", "valueSizeDelta" ],
+        "type" : "object",
+        "properties" : {
+          "targetPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "scopedMetadataKey" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          },
+          "targetMosaicId" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "valueSizeDelta" : {
+            "type" : "integer",
+            "description" : "Change in value size in bytes.",
+            "format" : "int32"
+          },
+          "valueSize" : {
+            "type" : "integer",
+            "description" : "Value size in bytes.",
+            "format" : "int32"
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "When there is an existing value, the new value is calculated as xor(previous-value, value).",
+            "format" : "hex"
+          }
+        }
+      },
+      "MosaicMetadataTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to create or modify a multisig account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicMetadataTransactionBodyDTO"
+        } ]
+      },
+      "NamespaceMetadataTransactionBodyDTO" : {
+        "required" : [ "scopedMetadataKey", "targetMosaicId", "targetPublicKey", "value", "valueSize", "valueSizeDelta" ],
+        "type" : "object",
+        "properties" : {
+          "targetPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "scopedMetadataKey" : {
+            "$ref" : "#/components/schemas/MetadataKey"
+          },
+          "targetNamespaceId" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "valueSizeDelta" : {
+            "type" : "integer",
+            "description" : "Change in value size in bytes.",
+            "format" : "int32"
+          },
+          "valueSize" : {
+            "type" : "integer",
+            "description" : "Value size in bytes.",
+            "format" : "int32"
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "When there is an existing value, the new value is calculated as xor(previous-value, value).",
+            "format" : "hex"
+          }
+        }
+      },
+      "NamespaceMetadataTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to create or modify a multisig account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/NamespaceMetadataTransactionBodyDTO"
+        } ]
+      },
+      "MosaicFlagsEnum" : {
+        "type" : "integer",
+        "description" : "- 0x00 (none) - No flags present.\n- 0x01 (supplyMutable) - Mosaic supports supply changes even when mosaic owner owns partial supply.\n- 0x02 (transferable) - Mosaic supports transfers between arbitrary accounts. When not set, mosaic can only be transferred to and from mosaic owner.\n- 0x04 (restrictable) - Mosaic supports custom restrictions configured by mosaic owner.\n",
+        "format" : "int32"
+      },
+      "MosaicSupplyChangeActionEnum" : {
+        "type" : "integer",
+        "description" : "Direction of the supply change:\n* 0  - Decrease.\n* 1  - Increase.\n",
+        "format" : "int32",
+        "example" : 0,
+        "enum" : [ 0, 1 ]
+      },
+      "EmbeddedMosaicDefinitionTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicDefinitionTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedMosaicSupplyChangeTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicSupplyChangeTransactionBodyDTO"
+        } ]
+      },
+      "MosaicDefinitionTransactionBodyDTO" : {
+        "required" : [ "divisibility", "duration", "flags", "id", "nonce" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "duration" : {
+            "$ref" : "#/components/schemas/BlockDuration"
+          },
+          "nonce" : {
+            "type" : "integer",
+            "description" : "Random nonce used to generate the mosaic id.",
+            "format" : "int64",
+            "example" : 0
+          },
+          "flags" : {
+            "$ref" : "#/components/schemas/MosaicFlagsEnum"
+          },
+          "divisibility" : {
+            "type" : "integer",
+            "description" : "Determines up to what decimal place the mosaic can be divided.\nDivisibility of 3 means that a mosaic can be divided into smallest parts of 0.001 mosaics.\nThe divisibility must be in the range of 0 and 6.\n",
+            "format" : "uint32"
+          }
+        }
+      },
+      "MosaicDefinitionTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to create a new mosaic.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicDefinitionTransactionBodyDTO"
+        } ]
+      },
+      "MosaicDTO" : {
+        "required" : [ "divisibility", "duration", "flags", "id", "ownerAddress", "ownerPublicKey", "revision", "startHeight", "supply" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "supply" : {
+            "$ref" : "#/components/schemas/Amount"
+          },
+          "startHeight" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "ownerPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "ownerAddress" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "revision" : {
+            "type" : "integer",
+            "description" : "Number of definitions for the same mosaic.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "flags" : {
+            "$ref" : "#/components/schemas/MosaicFlagsEnum"
+          },
+          "divisibility" : {
+            "type" : "integer",
+            "description" : "Determines up to what decimal place the mosaic can be divided.\nDivisibility of 3 means that a mosaic can be divided into smallest parts of 0.001 mosaics.\nThe divisibility must be in the range of 0 and 6.\n",
+            "format" : "uint32"
+          },
+          "duration" : {
+            "$ref" : "#/components/schemas/BlockDuration"
+          }
+        }
+      },
+      "MosaicInfoDTO" : {
+        "required" : [ "mosaic" ],
+        "type" : "object",
+        "properties" : {
+          "mosaic" : {
+            "$ref" : "#/components/schemas/MosaicDTO"
+          }
+        }
+      },
+      "MosaicsInfoDTO" : {
+        "required" : [ "mosaics" ],
+        "type" : "object",
+        "properties" : {
+          "mosaics" : {
+            "type" : "array",
+            "description" : "Array of mosaics information.",
+            "items" : {
+              "$ref" : "#/components/schemas/MosaicDTO"
+            }
+          }
+        }
+      },
+      "MosaicSupplyChangeTransactionBodyDTO" : {
+        "required" : [ "action", "delta", "mosaicId" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "delta" : {
+            "$ref" : "#/components/schemas/Amount"
+          },
+          "action" : {
+            "$ref" : "#/components/schemas/MosaicSupplyChangeActionEnum"
+          }
+        }
+      },
+      "MosaicSupplyChangeTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to increase or decrease the supply of a mosaic.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicSupplyChangeTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedMultisigAccountModificationTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MultisigAccountModificationTransactionBodyDTO"
+        } ]
+      },
+      "MultisigAccountGraphInfoDTO" : {
+        "required" : [ "level", "multisigEntries" ],
+        "type" : "object",
+        "properties" : {
+          "level" : {
+            "type" : "integer",
+            "description" : "Level of the multisig account.",
+            "format" : "int32",
+            "example" : 0
+          },
+          "multisigEntries" : {
+            "type" : "array",
+            "description" : "Array of multisig accounts for this level.",
+            "items" : {
+              "$ref" : "#/components/schemas/MultisigAccountInfoDTO"
+            }
+          }
+        }
+      },
+      "MultisigAccountInfoDTO" : {
+        "required" : [ "multisig" ],
+        "type" : "object",
+        "properties" : {
+          "multisig" : {
+            "$ref" : "#/components/schemas/MultisigDTO"
+          }
+        }
+      },
+      "MultisigAccountModificationTransactionBodyDTO" : {
+        "required" : [ "minApprovalDelta", "minRemovalDelta", "publicKeyAdditions", "publicKeyDeletions" ],
+        "type" : "object",
+        "properties" : {
+          "minRemovalDelta" : {
+            "type" : "integer",
+            "description" : "Number of signatures needed to remove a cosignatory.\nIf we are modifying an existing multisig account, this indicates the relative change of the minimum cosignatories.\n",
+            "format" : "int32",
+            "example" : 1
+          },
+          "minApprovalDelta" : {
+            "type" : "integer",
+            "description" : "Number of signatures needed to approve a transaction.\nIf we are modifying an existing multisig account, this indicates the relative change of the minimum cosignatories.\n",
+            "format" : "int32",
+            "example" : 1
+          },
+          "publicKeyAdditions" : {
+            "type" : "array",
+            "description" : "Array of cosignatory accounts to add.",
+            "items" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            }
+          },
+          "publicKeyDeletions" : {
+            "type" : "array",
+            "description" : "Array of cosignatory accounts to delete.",
+            "items" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            }
+          }
+        }
+      },
+      "MultisigAccountModificationTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to create or modify a multisig account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MultisigAccountModificationTransactionBodyDTO"
+        } ]
+      },
+      "MultisigDTO" : {
+        "required" : [ "accountAddress", "accountPublicKey", "cosignatoryPublicKeys", "minApproval", "minRemoval", "multisigPublicKeys" ],
+        "type" : "object",
+        "properties" : {
+          "accountPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "accountAddress" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "minApproval" : {
+            "type" : "integer",
+            "description" : "Number of signatures needed to approve a transaction.",
+            "format" : "int32",
+            "example" : 2
+          },
+          "minRemoval" : {
+            "type" : "integer",
+            "description" : "Number of signatures needed to remove a cosignatory.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "cosignatoryPublicKeys" : {
+            "type" : "array",
+            "description" : "Array of public keys of the cosignatory accounts.",
+            "items" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            }
+          },
+          "multisigPublicKeys" : {
+            "type" : "array",
+            "description" : "Array of multisig accounts where the account is cosignatory.",
+            "example" : [ "565059F55E68F904214E8BE1D610B5BBEA4CE46CC13D246D45BC1DAE5D32A0D2" ],
+            "items" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            }
+          }
+        }
+      },
+      "AliasActionEnum" : {
+        "type" : "integer",
+        "description" : "Alias action:\n* 0 - Unlink alias.\n* 1 - Link alias.\n",
+        "format" : "int32",
+        "example" : 0,
+        "enum" : [ 0, 1 ]
+      },
+      "AliasTypeEnum" : {
+        "type" : "integer",
+        "description" : "Type of alias:\n* 0 - No alias.\n* 1 - Mosaic id alias.\n* 2 - Addres alias.\n",
+        "format" : "int32",
+        "example" : 0,
+        "enum" : [ 0, 1, 2 ]
+      },
+      "NamespaceRegistrationTypeEnum" : {
+        "type" : "integer",
+        "description" : "Type of namespace:\n* 0 - Root namespace.\n* 1 - Subnamespace.\n",
+        "format" : "int32",
+        "example" : 0,
+        "enum" : [ 0, 1 ]
+      },
+      "AccountNamesDTO" : {
+        "required" : [ "address", "names" ],
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "names" : {
+            "type" : "array",
+            "description" : "Account linked namespace names.",
+            "example" : [ "alias1", "alias2" ],
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "AccountsNamesDTO" : {
+        "required" : [ "accountNames" ],
+        "type" : "object",
+        "properties" : {
+          "accountNames" : {
+            "type" : "array",
+            "description" : "Array of account names.",
+            "items" : {
+              "$ref" : "#/components/schemas/AccountNamesDTO"
+            }
+          }
+        }
+      },
+      "AddressAliasTransactionBodyDTO" : {
+        "required" : [ "address", "aliasAction", "namespaceId" ],
+        "type" : "object",
+        "properties" : {
+          "namespaceId" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "aliasAction" : {
+            "$ref" : "#/components/schemas/AliasActionEnum"
+          }
+        }
+      },
+      "AddressAliasTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to link a namespace to an account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AddressAliasTransactionBodyDTO"
+        } ]
+      },
+      "AliasDTO" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "$ref" : "#/components/schemas/AliasTypeEnum"
+          },
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          }
+        }
+      },
+      "EmbeddedAddressAliasTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AddressAliasTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedMosaicAliasTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicAliasTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedNamespaceRegistrationTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/NamespaceRegistrationTransactionBodyDTO"
+        } ]
+      },
+      "MosaicAliasTransactionBodyDTO" : {
+        "required" : [ "aliasAction", "mosaicId", "namespaceId" ],
+        "type" : "object",
+        "properties" : {
+          "namespaceId" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "aliasAction" : {
+            "$ref" : "#/components/schemas/AliasActionEnum"
+          }
+        }
+      },
+      "MosaicAliasTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to link a namespace to a mosaic.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicAliasTransactionBodyDTO"
+        } ]
+      },
+      "MosaicNamesDTO" : {
+        "required" : [ "mosaicId", "names" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "names" : {
+            "type" : "array",
+            "description" : "Mosaic linked namespace names.",
+            "example" : [ "cat.currency" ],
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "MosaicsNamesDTO" : {
+        "required" : [ "mosaicNames" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicNames" : {
+            "type" : "array",
+            "description" : "Array of mosaic names.",
+            "items" : {
+              "$ref" : "#/components/schemas/MosaicNamesDTO"
+            }
+          }
+        }
+      },
+      "NamespaceInfoDTO" : {
+        "required" : [ "meta", "namespace" ],
+        "type" : "object",
+        "properties" : {
+          "meta" : {
+            "$ref" : "#/components/schemas/NamespaceMetaDTO"
+          },
+          "namespace" : {
+            "$ref" : "#/components/schemas/NamespaceDTO"
+          }
+        }
+      },
+      "NamespaceMetaDTO" : {
+        "required" : [ "active", "id", "index" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "index" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "NamespaceDTO" : {
+        "required" : [ "alias", "depth", "endHeight", "level0", "ownerAddress", "ownerPublicKey", "parentId", "registrationType", "startHeight" ],
+        "type" : "object",
+        "properties" : {
+          "registrationType" : {
+            "$ref" : "#/components/schemas/NamespaceRegistrationTypeEnum"
+          },
+          "depth" : {
+            "type" : "integer",
+            "description" : "Level of the namespace.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "level0" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "level1" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "level2" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "alias" : {
+            "$ref" : "#/components/schemas/AliasDTO"
+          },
+          "parentId" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "ownerPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          },
+          "ownerAddress" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "startHeight" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "endHeight" : {
+            "$ref" : "#/components/schemas/Height"
+          }
+        }
+      },
+      "NamespaceNameDTO" : {
+        "required" : [ "id", "name" ],
+        "type" : "object",
+        "properties" : {
+          "parentId" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "id" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Namespace name.",
+            "example" : "cat"
+          }
+        }
+      },
+      "NamespaceRegistrationTransactionBodyDTO" : {
+        "required" : [ "duration", "id", "name", "parentId", "registrationType" ],
+        "type" : "object",
+        "properties" : {
+          "duration" : {
+            "$ref" : "#/components/schemas/BlockDuration"
+          },
+          "parentId" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "id" : {
+            "$ref" : "#/components/schemas/NamespaceId"
+          },
+          "registrationType" : {
+            "$ref" : "#/components/schemas/NamespaceRegistrationTypeEnum"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Namespace name."
+          }
+        }
+      },
+      "NamespaceRegistrationTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to create or renew a namespace.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/NamespaceRegistrationTransactionBodyDTO"
+        } ]
+      },
+      "NamespacesInfoDTO" : {
+        "required" : [ "namespaces" ],
+        "type" : "object",
+        "properties" : {
+          "namespaces" : {
+            "type" : "array",
+            "description" : "Array of namespaces information.",
+            "items" : {
+              "$ref" : "#/components/schemas/NamespaceInfoDTO"
+            }
+          }
+        }
+      },
+      "ReceiptTypeEnum" : {
+        "type" : "integer",
+        "description" : "Type of receipt:\n* 0x124D (4685 decimal) - Mosaic_Rental_Fee.\n* 0x134E (4942 decimal) - Namespace_Rental_Fee.\n* 0x2143 (8515 decimal) - Harvest_Fee.\n* 0x2248 (8776 decimal) - LockHash_Completed.\n* 0x2348 (9032 decimal) - LockHash_Expired.\n* 0x2252 (8786 decimal) - LockSecret_Completed.\n* 0x2352 (9042 decimal) - LockSecret_Expired.\n* 0x3148 (12616 decimal) - LockHash_Created.\n* 0x3152 (12626 decimal) - LockSecret_Created.\n* 0x414D (16717 decimal) - Mosaic_Expired.\n* 0x414E (16718 decimal) - Namespace_Expired.\n* 0x424E (16974 decimal) - Namespace_Deleted.\n* 0x5143 (20803 decimal) - Inflation.\n* 0xE143 (57667 decimal) - Transaction_Group.\n* 0xF143 (61763 decimal) - Address_Alias_Resolution.\n* 0xF243 (62019 decimal) - Mosaic_Alias_Resolution.\n",
+        "format" : "int32",
+        "enum" : [ 4685, 4942, 8515, 8776, 9032, 8786, 9042, 12616, 12626, 16717, 16718, 16974, 20803, 57667, 61763, 62019 ]
+      },
+      "BalanceTransferReceiptDTO" : {
+        "type" : "object",
+        "description" : "Invisible state change that triggered a mosaic transfer.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ReceiptDTO"
+        }, {
+          "required" : [ "amount", "mosaicId", "recipientAddress", "senderPublicKey" ],
+          "type" : "object",
+          "properties" : {
+            "mosaicId" : {
+              "$ref" : "#/components/schemas/MosaicId"
+            },
+            "amount" : {
+              "$ref" : "#/components/schemas/Amount"
+            },
+            "senderPublicKey" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            },
+            "recipientAddress" : {
+              "$ref" : "#/components/schemas/Address"
+            }
+          }
+        } ]
+      },
+      "BalanceChangeReceiptDTO" : {
+        "type" : "object",
+        "description" : "Invisible state change that changed an account balance.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ReceiptDTO"
+        }, {
+          "required" : [ "amount", "mosaicId", "targetPublicKey" ],
+          "type" : "object",
+          "properties" : {
+            "mosaicId" : {
+              "$ref" : "#/components/schemas/MosaicId"
+            },
+            "amount" : {
+              "$ref" : "#/components/schemas/Amount"
+            },
+            "targetPublicKey" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            }
+          }
+        } ]
+      },
+      "NamespaceExpiryReceiptDTO" : {
+        "type" : "object",
+        "description" : "An namespace expired in this block.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ReceiptDTO"
+        }, {
+          "required" : [ "artifactId" ],
+          "type" : "object",
+          "properties" : {
+            "artifactId" : {
+              "$ref" : "#/components/schemas/NamespaceId"
+            }
+          }
+        } ]
+      },
+      "MosaicExpiryReceiptDTO" : {
+        "type" : "object",
+        "description" : "A mosaic expired in this block.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ReceiptDTO"
+        }, {
+          "required" : [ "artifactId" ],
+          "type" : "object",
+          "properties" : {
+            "artifactId" : {
+              "$ref" : "#/components/schemas/MosaicId"
+            }
+          }
+        } ]
+      },
+      "InflationReceiptDTO" : {
+        "type" : "object",
+        "description" : "Native currency mosaics that were created due to inflation.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ReceiptDTO"
+        }, {
+          "required" : [ "amount", "mosaicId" ],
+          "type" : "object",
+          "properties" : {
+            "mosaicId" : {
+              "$ref" : "#/components/schemas/MosaicId"
+            },
+            "amount" : {
+              "$ref" : "#/components/schemas/Amount"
+            }
+          }
+        } ]
+      },
+      "ReceiptDTO" : {
+        "required" : [ "type", "version" ],
+        "type" : "object",
+        "properties" : {
+          "version" : {
+            "type" : "integer",
+            "description" : "Version of the receipt.",
+            "format" : "int32"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/ReceiptTypeEnum"
+          }
+        }
+      },
+      "ResolutionEntryDTO" : {
+        "required" : [ "resolved", "source" ],
+        "type" : "object",
+        "properties" : {
+          "source" : {
+            "$ref" : "#/components/schemas/SourceDTO"
+          },
+          "resolved" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Address"
+            }, {
+              "$ref" : "#/components/schemas/MosaicId"
+            } ]
+          }
+        }
+      },
+      "ResolutionStatementBodyDTO" : {
+        "required" : [ "height", "resolutionEntries", "unresolved" ],
+        "type" : "object",
+        "properties" : {
+          "height" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "unresolved" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/UnresolvedMosaicId"
+            }, {
+              "$ref" : "#/components/schemas/UnresolvedAddress"
+            } ]
+          },
+          "resolutionEntries" : {
+            "type" : "array",
+            "description" : "Array of resolution entries linked to the unresolved namespaceId.\nIt is an array instead of a single resolution entry since\nwithin one block the resolution might change for different sources due to alias related transactions.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/ResolutionEntryDTO"
+            }
+          }
+        }
+      },
+      "ResolutionStatementDTO" : {
+        "required" : [ "statement" ],
+        "type" : "object",
+        "properties" : {
+          "statement" : {
+            "$ref" : "#/components/schemas/ResolutionStatementBodyDTO"
+          }
+        },
+        "description" : "A resolution statement keeps the relation between a namespace alias used in a transaction\nand the real address or mosaicId.\n"
+      },
+      "SourceDTO" : {
+        "required" : [ "primaryId", "secondaryId" ],
+        "type" : "object",
+        "properties" : {
+          "primaryId" : {
+            "type" : "integer",
+            "description" : "Transaction index within the block.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "secondaryId" : {
+            "type" : "integer",
+            "description" : "Transaction index inside within the aggregate transaction.\nIf the transaction is not an inner transaction, then the secondary id is set to 0.\n",
+            "format" : "int32",
+            "example" : 0
+          }
+        },
+        "description" : "Transaction that triggered the receipt."
+      },
+      "StatementsDTO" : {
+        "required" : [ "addressResolutionStatements", "mosaicResolutionStatements", "transactionStatements" ],
+        "type" : "object",
+        "properties" : {
+          "transactionStatements" : {
+            "type" : "array",
+            "description" : "Array of transaction statements for the block requested.",
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionStatementDTO"
+            }
+          },
+          "addressResolutionStatements" : {
+            "type" : "array",
+            "description" : "Array of address resolutions for the block requested.",
+            "items" : {
+              "$ref" : "#/components/schemas/ResolutionStatementDTO"
+            }
+          },
+          "mosaicResolutionStatements" : {
+            "type" : "array",
+            "description" : "Array of mosaic resolutions for the block requested.",
+            "items" : {
+              "$ref" : "#/components/schemas/ResolutionStatementDTO"
+            }
+          }
+        },
+        "description" : "Collection of transaction statements and resolutions triggered for the block requested."
+      },
+      "TransactionStatementBodyDTO" : {
+        "required" : [ "height", "receipts", "source" ],
+        "type" : "object",
+        "properties" : {
+          "height" : {
+            "$ref" : "#/components/schemas/Height"
+          },
+          "source" : {
+            "$ref" : "#/components/schemas/SourceDTO"
+          },
+          "receipts" : {
+            "type" : "array",
+            "description" : "Array of receipts.",
+            "items" : {
+              "anyOf" : [ {
+                "$ref" : "#/components/schemas/BalanceTransferReceiptDTO"
+              }, {
+                "$ref" : "#/components/schemas/BalanceChangeReceiptDTO"
+              }, {
+                "$ref" : "#/components/schemas/NamespaceExpiryReceiptDTO"
+              }, {
+                "$ref" : "#/components/schemas/MosaicExpiryReceiptDTO"
+              }, {
+                "$ref" : "#/components/schemas/InflationReceiptDTO"
+              } ]
+            }
+          }
+        }
+      },
+      "TransactionStatementDTO" : {
+        "required" : [ "statement" ],
+        "type" : "object",
+        "properties" : {
+          "statement" : {
+            "$ref" : "#/components/schemas/TransactionStatementBodyDTO"
+          }
+        },
+        "description" : "Collection of receipts related to a transaction."
+      },
+      "AccountRestrictionFlagsEnum" : {
+        "type" : "integer",
+        "description" : "Type of account restriction:\n* 0x0001 (1 decimal) - Allow only incoming transactions from a given address.\n* 0x0002 (2 decimal) - Allow only incoming transactions containing a given mosaic identifier.\n* 0x4001 (16385 decimal) - Allow only outgoing transactions to a given address.\n* 0x4004 (16388 decimal) - Allow only outgoing transactions with a given transaction type.\n* 0x8001 (32769 decimal) - Block incoming transactions from a given address.\n* 0x8002 (32770 decimal) - Block incoming transactions containing a given mosaic identifier.\n* 0xC001 (49153 decimal) - Block outgoing transactions to a given address.\n* 0xC004 (49156 decimal) - Block outgoing transactions with a given transaction type.\n",
+        "format" : "int32",
+        "example" : 1,
+        "enum" : [ 1, 2, 16385, 16388, 32769, 32770, 49153, 49156 ]
+      },
+      "AccountAddressRestrictionTransactionBodyDTO" : {
+        "required" : [ "restrictionAdditions", "restrictionDeletions", "restrictionFlags" ],
+        "type" : "object",
+        "properties" : {
+          "restrictionFlags" : {
+            "$ref" : "#/components/schemas/AccountRestrictionFlagsEnum"
+          },
+          "restrictionAdditions" : {
+            "type" : "array",
+            "description" : "Account restriction additions.",
+            "items" : {
+              "$ref" : "#/components/schemas/UnresolvedAddress"
+            }
+          },
+          "restrictionDeletions" : {
+            "type" : "array",
+            "description" : "Account restriction deletions.",
+            "items" : {
+              "$ref" : "#/components/schemas/UnresolvedAddress"
+            }
+          }
+        }
+      },
+      "AccountAddressRestrictionTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to prevent incoming and outgoing transactions for a given a set of addresses.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountAddressRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "AccountMosaicRestrictionTransactionBodyDTO" : {
+        "required" : [ "restrictionAdditions", "restrictionDeletions", "restrictionFlags" ],
+        "type" : "object",
+        "properties" : {
+          "restrictionFlags" : {
+            "$ref" : "#/components/schemas/AccountRestrictionFlagsEnum"
+          },
+          "restrictionAdditions" : {
+            "type" : "array",
+            "description" : "Account restriction additions.",
+            "items" : {
+              "$ref" : "#/components/schemas/UnresolvedMosaicId"
+            }
+          },
+          "restrictionDeletions" : {
+            "type" : "array",
+            "description" : "Account restriction deletions.",
+            "items" : {
+              "$ref" : "#/components/schemas/UnresolvedMosaicId"
+            }
+          }
+        }
+      },
+      "AccountMosaicRestrictionTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to prevent incoming transactions containing a given set of mosaics.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountMosaicRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "AccountOperationRestrictionTransactionBodyDTO" : {
+        "required" : [ "restrictionAdditions", "restrictionDeletions", "restrictionFlags" ],
+        "type" : "object",
+        "properties" : {
+          "restrictionFlags" : {
+            "$ref" : "#/components/schemas/AccountRestrictionFlagsEnum"
+          },
+          "restrictionAdditions" : {
+            "type" : "array",
+            "description" : "Account restriction additions.",
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionTypeEnum"
+            }
+          },
+          "restrictionDeletions" : {
+            "type" : "array",
+            "description" : "Account restriction deletions.",
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionTypeEnum"
+            }
+          }
+        }
+      },
+      "AccountOperationRestrictionTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to prevent outgoing transactions by transaction type.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountOperationRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "AccountRestrictionsInfoDTO" : {
+        "required" : [ "accountRestrictions" ],
+        "type" : "object",
+        "properties" : {
+          "accountRestrictions" : {
+            "$ref" : "#/components/schemas/AccountRestrictionsDTO"
+          }
+        }
+      },
+      "AccountRestrictionsDTO" : {
+        "required" : [ "address", "restrictions" ],
+        "type" : "object",
+        "properties" : {
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "restrictions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AccountRestrictionDTO"
+            }
+          }
+        }
+      },
+      "AccountRestrictionDTO" : {
+        "required" : [ "restrictionFlags", "values" ],
+        "type" : "object",
+        "properties" : {
+          "restrictionFlags" : {
+            "$ref" : "#/components/schemas/AccountRestrictionFlagsEnum"
+          },
+          "values" : {
+            "type" : "array",
+            "description" : "Address, mosaic id, or transaction type to restrict.",
+            "items" : {
+              "anyOf" : [ {
+                "$ref" : "#/components/schemas/UnresolvedAddress"
+              }, {
+                "$ref" : "#/components/schemas/UnresolvedMosaicId"
+              }, {
+                "$ref" : "#/components/schemas/TransactionTypeEnum"
+              } ]
+            }
+          }
+        }
+      },
+      "EmbeddedAccountAddressRestrictionTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountAddressRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedAccountMosaicRestrictionTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountMosaicRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedAccountOperationRestrictionTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/AccountOperationRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "MosaicRestrictionEntryTypeEnum" : {
+        "type" : "integer",
+        "description" : "- 0 - Mosaic address restriction.\n- 1 - Mosaic global restriction.\n",
+        "format" : "int32",
+        "enum" : [ 0, 1 ]
+      },
+      "MosaicRestrictionTypeEnum" : {
+        "type" : "integer",
+        "description" : "Type of mosaic restriction.\n* 0 - Uninitialized value indicating no restriction.\n* 1 (EQ) - Allow if equal.\n* 2 (NE) - Allow if not equal.\n* 3 (LT) - Allow if less than.\n* 4 (LE) - Allow if less than or equal.\n* 5 (GT) - Allow if greater than.\n* 6 (GE) - Allow if greater than or equal.\n",
+        "format" : "int32",
+        "enum" : [ 0, 1, 2, 3, 4, 5, 6 ]
+      },
+      "EmbeddedMosaicAddressRestrictionTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicAddressRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "EmbeddedMosaicGlobalRestrictionTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicGlobalRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "MosaicAddressRestrictionDTO" : {
+        "required" : [ "mosaicRestrictionEntry" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicRestrictionEntry" : {
+            "$ref" : "#/components/schemas/MosaicAddressRestrictionEntryWrapperDTO"
+          }
+        }
+      },
+      "MosaicAddressRestrictionEntryDTO" : {
+        "required" : [ "key", "value" ],
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionKey"
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "Restriction value."
+          }
+        }
+      },
+      "MosaicAddressRestrictionEntryWrapperDTO" : {
+        "required" : [ "compositeHash", "entryType", "mosaicId", "restrictions", "targetAddress" ],
+        "type" : "object",
+        "properties" : {
+          "compositeHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "entryType" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionEntryTypeEnum"
+          },
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "targetAddress" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "restrictions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MosaicAddressRestrictionEntryDTO"
+            }
+          }
+        }
+      },
+      "MosaicAddressRestrictionTransactionBodyDTO" : {
+        "required" : [ "mosaicId", "newRestrictionValue", "previousRestrictionValue", "restrictionKey", "targetAddress" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "restrictionKey" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionKey"
+          },
+          "previousRestrictionValue" : {
+            "$ref" : "#/components/schemas/RestrictionValue"
+          },
+          "newRestrictionValue" : {
+            "$ref" : "#/components/schemas/RestrictionValue"
+          },
+          "targetAddress" : {
+            "$ref" : "#/components/schemas/UnresolvedAddress"
+          }
+        }
+      },
+      "MosaicAddressRestrictionTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to set a restriction rule to an address.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicAddressRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "MosaicGlobalRestrictionDTO" : {
+        "required" : [ "mosaicRestrictionEntry" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicRestrictionEntry" : {
+            "$ref" : "#/components/schemas/MosaicGlobalRestrictionEntryWrapperDTO"
+          }
+        }
+      },
+      "MosaicGlobalRestrictionEntryDTO" : {
+        "required" : [ "key", "restriction" ],
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionKey"
+          },
+          "restriction" : {
+            "$ref" : "#/components/schemas/MosaicGlobalRestrictionEntryRestrictionDTO"
+          }
+        }
+      },
+      "MosaicGlobalRestrictionEntryRestrictionDTO" : {
+        "required" : [ "referenceMosaicId", "restrictionType", "restrictionValue" ],
+        "type" : "object",
+        "properties" : {
+          "referenceMosaicId" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "restrictionValue" : {
+            "$ref" : "#/components/schemas/RestrictionValue"
+          },
+          "restrictionType" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionTypeEnum"
+          }
+        }
+      },
+      "MosaicGlobalRestrictionEntryWrapperDTO" : {
+        "required" : [ "compositeHash", "entryType", "mosaicId", "restrictions" ],
+        "type" : "object",
+        "properties" : {
+          "compositeHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "entryType" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionEntryTypeEnum"
+          },
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/MosaicId"
+          },
+          "restrictions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MosaicGlobalRestrictionEntryDTO"
+            }
+          }
+        }
+      },
+      "MosaicGlobalRestrictionTransactionBodyDTO" : {
+        "required" : [ "mosaicId", "newRestrictionType", "newRestrictionValue", "previousRestrictionType", "previousRestrictionValue", "referenceMosaicId", "restrictionKey" ],
+        "type" : "object",
+        "properties" : {
+          "mosaicId" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "referenceMosaicId" : {
+            "$ref" : "#/components/schemas/UnresolvedMosaicId"
+          },
+          "restrictionKey" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionKey"
+          },
+          "previousRestrictionValue" : {
+            "$ref" : "#/components/schemas/RestrictionValue"
+          },
+          "newRestrictionValue" : {
+            "$ref" : "#/components/schemas/RestrictionValue"
+          },
+          "previousRestrictionType" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionTypeEnum"
+          },
+          "newRestrictionType" : {
+            "$ref" : "#/components/schemas/MosaicRestrictionTypeEnum"
+          }
+        }
+      },
+      "MosaicGlobalRestrictionTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to set a network-wide restriction rule to a mosaic.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/MosaicGlobalRestrictionTransactionBodyDTO"
+        } ]
+      },
+      "MessageTypeEnum" : {
+        "type" : "integer",
+        "description" : "Type of message:\n* 0 - Regular message.\n* 1 - Encrypted message.\n* 254 - Persistent harvesting delegation.\n",
+        "format" : "int32",
+        "example" : 0,
+        "enum" : [ 0, 1, 254 ]
+      },
+      "EmbeddedTransferTransactionDTO" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EmbeddedTransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/TransferTransactionBodyDTO"
+        } ]
+      },
+      "MessageDTO" : {
+        "required" : [ "payload", "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "$ref" : "#/components/schemas/MessageTypeEnum"
+          },
+          "payload" : {
+            "type" : "string",
+            "description" : "Content of the message in hexadecimal."
+          }
+        }
+      },
+      "TransferTransactionBodyDTO" : {
+        "required" : [ "message", "mosaics", "recipientAddress" ],
+        "type" : "object",
+        "properties" : {
+          "recipientAddress" : {
+            "$ref" : "#/components/schemas/UnresolvedAddress"
+          },
+          "mosaics" : {
+            "type" : "array",
+            "description" : "Array of mosaics sent to the recipient.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/UnresolvedMosaic"
+            }
+          },
+          "message" : {
+            "$ref" : "#/components/schemas/MessageDTO"
+          }
+        }
+      },
+      "TransferTransactionDTO" : {
+        "type" : "object",
+        "description" : "Transaction to transfer mosaics and a message to another account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TransactionDTO"
+        }, {
+          "$ref" : "#/components/schemas/TransferTransactionBodyDTO"
+        } ]
+      },
+      "accountIds" : {
+        "type" : "object",
+        "properties" : {
+          "publicKeys" : {
+            "type" : "array",
+            "description" : "Array of public keys.",
+            "items" : {
+              "$ref" : "#/components/schemas/PublicKey"
+            }
+          },
+          "addresses" : {
+            "type" : "array",
+            "description" : "Array of addresses.",
+            "items" : {
+              "$ref" : "#/components/schemas/Address"
+            }
+          }
+        }
+      },
+      "cosignature" : {
+        "type" : "object",
+        "properties" : {
+          "parentHash" : {
+            "$ref" : "#/components/schemas/Hash256"
+          },
+          "signature" : {
+            "$ref" : "#/components/schemas/Signature"
+          },
+          "signerPublicKey" : {
+            "$ref" : "#/components/schemas/PublicKey"
+          }
+        }
+      },
+      "mosaicIds" : {
+        "type" : "object",
+        "properties" : {
+          "mosaicIds" : {
+            "type" : "array",
+            "description" : "Array of mosaic identifiers.",
+            "items" : {
+              "$ref" : "#/components/schemas/MosaicId"
+            }
+          }
+        }
+      },
+      "namespaceIds" : {
+        "type" : "object",
+        "properties" : {
+          "namespaceIds" : {
+            "type" : "array",
+            "description" : "Array of namespace identifiers.",
+            "items" : {
+              "$ref" : "#/components/schemas/NamespaceId"
+            }
+          }
+        }
+      },
+      "transactionHashes" : {
+        "type" : "object",
+        "properties" : {
+          "hashes" : {
+            "type" : "array",
+            "description" : "Array of transaction hashes.",
+            "items" : {
+              "$ref" : "#/components/schemas/Hash256"
+            }
+          }
+        }
+      },
+      "transactionIds" : {
+        "type" : "object",
+        "properties" : {
+          "transactionIds" : {
+            "type" : "array",
+            "description" : "Array of transaction identifiers.",
+            "example" : [ "59B8DA0F0CB2720001103922", "59B8D8E60CB2720001103904" ],
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "transactionPayload" : {
+        "type" : "object",
+        "properties" : {
+          "payload" : {
+            "type" : "string",
+            "description" : "Transaction payload."
+          }
+        }
+      }
+    },
+    "responses" : {
+      "ResourceNotFound" : {
+        "description" : "ResourceNotFound",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ModelError"
+            }
+          }
+        }
+      },
+      "InvalidContent" : {
+        "description" : "InvalidContent",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ModelError"
+            }
+          }
+        }
+      },
+      "InvalidArgument" : {
+        "description" : "InvalidArgument",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ModelError"
+            }
+          }
+        }
+      }
+    },
+    "parameters" : {
+      "accountId" : {
+        "name" : "accountId",
+        "in" : "path",
+        "description" : "Account public key or address.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "height" : {
+        "name" : "height",
+        "in" : "path",
+        "description" : "Block height.\nIf height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.\n",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "$ref" : "#/components/schemas/Height"
+        }
+      },
+      "limit" : {
+        "name" : "limit",
+        "in" : "path",
+        "description" : "Number of elements to be returned.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "integer",
+          "format" : "int32",
+          "enum" : [ 25, 50, 75, 100 ]
+        }
+      },
+      "metadataIdLimit" : {
+        "name" : "id",
+        "in" : "query",
+        "description" : "Metadata identifier up to which metadata are returned.",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "metadataKey" : {
+        "name" : "key",
+        "in" : "path",
+        "description" : "Metadata key.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "$ref" : "#/components/schemas/MetadataKey"
+        }
+      },
+      "mosaicId" : {
+        "name" : "mosaicId",
+        "in" : "path",
+        "description" : "Mosaic identifier.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "$ref" : "#/components/schemas/MosaicId"
+        }
+      },
+      "namespaceId" : {
+        "name" : "namespaceId",
+        "in" : "path",
+        "description" : "Namespace identifier.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "$ref" : "#/components/schemas/NamespaceId"
+        }
+      },
+      "namespaceIdLimit" : {
+        "name" : "id",
+        "in" : "query",
+        "description" : "Namespace identifier up to which transactions are returned.",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "ordering" : {
+        "name" : "ordering",
+        "in" : "query",
+        "description" : "Ordering criteria:\n* -id - Descending order by id.\n* id - Ascending order by id.\n",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "string",
+          "default" : "-id"
+        }
+      },
+      "pageSize" : {
+        "name" : "pageSize",
+        "in" : "query",
+        "description" : "Number of transactions to return for each request.",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "maximum" : 100.0,
+          "minimum" : 10.0,
+          "type" : "integer",
+          "format" : "int32",
+          "default" : 10
+        }
+      },
+      "publicKey" : {
+        "name" : "publicKey",
+        "in" : "path",
+        "description" : "Account public key.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "$ref" : "#/components/schemas/PublicKey"
+        }
+      },
+      "receiptHash" : {
+        "name" : "hash",
+        "in" : "path",
+        "description" : "Receipt hash.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "$ref" : "#/components/schemas/Hash256"
+        }
+      },
+      "transactionHash" : {
+        "name" : "hash",
+        "in" : "path",
+        "description" : "Transaction hash.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "$ref" : "#/components/schemas/Hash256"
+        }
+      },
+      "transactionId" : {
+        "name" : "transactionId",
+        "in" : "path",
+        "description" : "Transaction identifier or hash.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "transactionIdLimit" : {
+        "name" : "id",
+        "in" : "query",
+        "description" : "Transaction identifier up to which transactions are returned.",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      }
+    },
+    "requestBodies" : {
+      "accountIds" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/accountIds"
+            }
+          }
+        },
+        "required" : false
+      },
+      "cosignature" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/cosignature"
+            }
+          }
+        },
+        "required" : true
+      },
+      "mosaicIds" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/mosaicIds"
+            }
+          }
+        },
+        "required" : true
+      },
+      "namespaceIds" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/namespaceIds"
+            }
+          }
+        },
+        "required" : true
+      },
+      "transactionHashes" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/transactionHashes"
+            }
+          }
+        },
+        "required" : true
+      },
+      "transactionIds" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/transactionIds"
+            }
+          }
+        },
+        "required" : true
+      },
+      "transactionPayload" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/transactionPayload"
+            }
+          }
+        },
+        "required" : true
+      }
+    }
+  }
+}
